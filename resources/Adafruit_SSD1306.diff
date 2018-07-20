@@ -1,0 +1,46 @@
+diff --git a/Adafruit_SSD1306.cpp b/Adafruit_SSD1306.cpp
+index 570a335..e040cc7 100644
+--- a/Adafruit_SSD1306.cpp
++++ b/Adafruit_SSD1306.cpp
+@@ -37,7 +37,7 @@ All text above, and the splash screen below must be included in any redistributi
+ 
+ // the memory buffer for the LCD
+ 
+-static uint8_t buffer[SSD1306_LCDHEIGHT * SSD1306_LCDWIDTH / 8] = {
++static uint8_t bufferbase[SSD1306_LCDHEIGHT * SSD1306_LCDWIDTH / 8] = {
+ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+@@ -169,6 +169,9 @@ Adafruit_GFX(SSD1306_LCDWIDTH, SSD1306_LCDHEIGHT) {
+ void Adafruit_SSD1306::begin(uint8_t vccstate, uint8_t i2caddr, bool reset) {
+   _vccstate = vccstate;
+   _i2caddr = i2caddr;
++  
++  buffer = new uint8_t[SSD1306_LCDHEIGHT * SSD1306_LCDWIDTH / 8];
++  memcpy(buffer, bufferbase, SSD1306_LCDHEIGHT * SSD1306_LCDWIDTH / 8);
+ 
+   // set pin directions
+   if (sid != -1){
+diff --git a/Adafruit_SSD1306.h b/Adafruit_SSD1306.h
+index 1162f87..76ca9f6 100644
+--- a/Adafruit_SSD1306.h
++++ b/Adafruit_SSD1306.h
+@@ -70,8 +70,8 @@ All text above, and the splash screen must be included in any redistribution
+     SSD1306_96_16
+ 
+     -----------------------------------------------------------------------*/
+-//   #define SSD1306_128_64
+-   #define SSD1306_128_32
++   #define SSD1306_128_64
++//   #define SSD1306_128_32
+ //   #define SSD1306_96_16
+ /*=========================================================================*/
+ 
+@@ -181,6 +181,7 @@ class Adafruit_SSD1306 : public Adafruit_GFX {
+   inline void drawFastVLineInternal(int16_t x, int16_t y, int16_t h, uint16_t color) __attribute__((always_inline));
+   inline void drawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color) __attribute__((always_inline));
+ 
++  uint8_t* buffer;
+ };
+ 
+ #endif /* _Adafruit_SSD1306_H_ */
